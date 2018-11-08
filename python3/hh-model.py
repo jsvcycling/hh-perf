@@ -68,7 +68,7 @@ M[0] = alpha_m(V[0])
 H = np.zeros(t.shape[0])
 H[0] = alpha_h(V[0])
 
-for i in range(0, t.shape[0] - 2):
+for i in range(0, t.shape[0] - 1):
   Iapp = I*heaviside(t[i] - I_start_time)*heaviside(I_end_time - t[i])
 
   I_K1 = g_K*np.power(N[i], 4)*(V[i] - V_K)
@@ -100,5 +100,6 @@ for i in range(0, t.shape[0] - 2):
   H[i+1] = H[i] + (H_1 + H_2)*dt/2
 
 # Plotting stuff (will not be used in time calculation).
+print(V[-1])
 plt.plot(t, V)
 plt.show()
