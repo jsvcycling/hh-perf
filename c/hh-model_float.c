@@ -16,12 +16,11 @@
 #define t_max   10000.f
 #define dt      0.01f
 
-#define I_start_time  1000
-#define I_end_time    5000
-#define I             12
+#define I_start_time  1000.f
+#define I_end_time    5000.f
+#define I             12.f
 
 float *t;
-
 float *V;
 float *N;
 float *M;
@@ -65,6 +64,10 @@ int main(int argc, char **argv) {
   M = (float *)malloc(sizeof(float) * num_ts);
   H = (float *)malloc(sizeof(float) * num_ts);
 
+  for (int i = 0; i < num_ts; i++) {
+    t[i] = i * dt;
+  }
+
   V[0] = V_L;
   N[0] = alpha_n(V[0]);
   M[0] = alpha_m(V[0]);
@@ -103,6 +106,23 @@ int main(int argc, char **argv) {
   }
 
   printf("%f\n", V[num_ts - 1]);
+
+  FILE *gnuplot = popen("gnuplot -persistent", "w");
+  fprintf(gnuplot, "set term png large size 1280,720\n");
+  fprintf(gnuplot, "set output 'output.png'\n");
+  /* fprintf(gnuplot, "set xrange ['%f':'%f']\n", 0.f, t_max); */
+  fprintf(gnuplot, "set datafile separator ','\n");
+  fprintf(gnuplot, "plot '-' with lines\n");
+
+  for (int i = 0; i < num_ts; i++) {
+    fprintf(gnuplot, "%f,%f\n", t[i], V[i]);
+    fflush(gnuplot);
+  }
+
+  fprintf(gnuplot, "e\n");
+  fflush(gnuplot);
+  
+  pclose(gnuplot);
 
   free(t);
   free(V);
