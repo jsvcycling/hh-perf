@@ -18,7 +18,6 @@
 
 #define I_start_time  1000.f
 #define I_end_time    5000.f
-#define I             12.f
 
 float *t;
 float *V;
@@ -56,7 +55,13 @@ float heaviside(float x) {
 }
 
 int main(int argc, char **argv) {
-  int num_ts = (int)floorf(t_max / dt);
+  /* Get input current from arguments */
+  float I = 0.f;
+  if (argc > 1) {
+    I = atof(argv[1]);
+  }
+  
+  int num_ts = (int)ceilf(t_max / dt);
 
   t = (float *)malloc(sizeof(float) * num_ts);
   V = (float *)malloc(sizeof(float) * num_ts);
@@ -64,8 +69,10 @@ int main(int argc, char **argv) {
   M = (float *)malloc(sizeof(float) * num_ts);
   H = (float *)malloc(sizeof(float) * num_ts);
 
-  for (int i = 0; i < num_ts; i++) {
-    t[i] = i * dt;
+  t[0] = 0.f;
+  
+  for (int i = 1; i < num_ts; i++) {
+    t[i] = t[i-1] + dt;
   }
 
   V[0] = V_L;
@@ -99,18 +106,21 @@ int main(int argc, char **argv) {
     float M_2 = alpha_m(aV)*(1.f - aM) - beta_m(aV)*aM;
     float H_2 = alpha_h(aV)*(1.f - aH) - beta_h(aV)*aH;
 
-    V[i+1] = V[i] + (V_1 + V_2) * dt / 2;
-    N[i+1] = N[i] + (N_1 + N_2) * dt / 2;
-    M[i+1] = M[i] + (M_1 + M_2) * dt / 2;
-    H[i+1] = H[i] + (H_1 + H_2) * dt / 2;
+    V[i+1] = V[i] + (V_1 + V_2) * dt / 2.f;
+    N[i+1] = N[i] + (N_1 + N_2) * dt / 2.f;
+    M[i+1] = M[i] + (M_1 + M_2) * dt / 2.f;
+    H[i+1] = H[i] + (H_1 + H_2) * dt / 2.f;
   }
 
   printf("%f\n", V[num_ts - 1]);
 
+  /* Plotting stuff... */
   FILE *gnuplot = popen("gnuplot -persistent", "w");
   fprintf(gnuplot, "set term png large size 1280,720\n");
-  fprintf(gnuplot, "set output 'output.png'\n");
+  fprintf(gnuplot, "set output 'output_float.png'\n");
   /* fprintf(gnuplot, "set xrange ['%f':'%f']\n", 0.f, t_max); */
+  fprintf(gnuplot, "set xrange [%f:%f]\n", 1000.f, 1050.f);
+  fprintf(gnuplot, "set yrange [%f:%f]\n", -20.f, 120.f);
   fprintf(gnuplot, "set datafile separator ','\n");
   fprintf(gnuplot, "plot '-' with lines\n");
 
