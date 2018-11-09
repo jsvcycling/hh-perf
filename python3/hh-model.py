@@ -48,7 +48,7 @@ V_K = -12
 V_Na = 115
 V_L = 10.6
 
-t_max = 10000.
+t_max = 10000
 dt = 0.01
 t = np.arange(0, t_max, dt)
 
