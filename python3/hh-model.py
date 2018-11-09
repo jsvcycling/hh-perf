@@ -99,7 +99,8 @@ for i in range(0, t.shape[0] - 1):
   M[i+1] = M[i] + (M_1 + M_2)*dt/2
   H[i+1] = H[i] + (H_1 + H_2)*dt/2
 
-# Plotting stuff (will not be used in time calculation).
 print(V[-1])
-plt.plot(t, V)
-plt.show()
+
+# Optional plotting functionality. Uncomment to enable (requires matplotlib).
+# plt.plot(t, V)
+# plt.show()

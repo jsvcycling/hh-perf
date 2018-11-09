@@ -1,3 +1,28 @@
+ /*
+ *==============================================================================
+ *
+ * Copyright (C) 2018 Joshua Vega (@jsvcycling)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *------------------------------------------------------------------------------
+ *
+ * An implementation of the Hodkin-Huxley model in C using floats.
+ *
+ *==============================================================================
+*/
+
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -114,7 +139,10 @@ int main(int argc, char **argv) {
 
   printf("%f\n", V[num_ts - 1]);
 
-  /* Plotting stuff... */
+  /*
+   * Optional plotting functionality. Uncomment to enable (requires gnuplot).
+   */
+  /*
   FILE *gnuplot = popen("gnuplot -persistent", "w");
   fprintf(gnuplot, "set term png large size 1280,720\n");
   fprintf(gnuplot, "set output 'output_float.png'\n");
@@ -132,6 +160,7 @@ int main(int argc, char **argv) {
   fflush(gnuplot);
   
   pclose(gnuplot);
+  */
 
   free(t);
   free(V);
