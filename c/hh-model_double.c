@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
     double Iapp = I*heaviside(t[i] - I_start_time)*heaviside(I_end_time - t[i]);
 
     double I_K1 = g_K*pow(N[i], 4)*(V[i] - V_K);
-    double I_Na1 = g_Na*pow(M[i], 4)*H[i]*(V[i] - V_Na);
+    double I_Na1 = g_Na*pow(M[i], 3)*H[i]*(V[i] - V_Na);
     double I_L1 = g_L*(V[i] - V_L);
 
     double V_1 = (Iapp - I_K1 - I_Na1 - I_L1)/C_m;
@@ -118,7 +118,6 @@ int main(int argc, char **argv) {
   FILE *gnuplot = popen("gnuplot -persistent", "w");
   fprintf(gnuplot, "set term png large size 1280,720\n");
   fprintf(gnuplot, "set output 'output_double.png'\n");
-  /* fprintf(gnuplot, "set xrange ['%f':'%f']\n", 0.0, t_max); */
   fprintf(gnuplot, "set xrange [%f:%f]\n", 1000.0, 1050.0);
   fprintf(gnuplot, "set yrange [%f:%f]\n", -20.0, 120.0);
   fprintf(gnuplot, "set datafile separator ','\n");
