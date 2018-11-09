@@ -30,19 +30,20 @@
 /* Using preprocessor statements to reduce memory calls. */
 #define C_m 1.f
 
-#define g_K   36.f
-#define g_Na  120.f
-#define g_L   0.3f
+#define g_K   36.0
+#define g_Na  120.0
+#define g_L   0.3
 
-#define V_K   -12.f
-#define V_Na  115.f
-#define V_L   10.6f
+#define V_K   -12.0
+#define V_Na  115.0
+#define V_L   10.6
 
-#define t_max   10000.f
-#define dt      0.01f
+#define t_max   10000.0
+#define dt      0.01
 
-#define I_start_time  1000.f
-#define I_end_time    5000.f
+#define I_start_time  1000.0
+#define I_end_time    5000.0
+#define I             12.0
 
 double *t;
 double *V;
@@ -80,12 +81,6 @@ double heaviside(double x) {
 }
 
 int main(int argc, char **argv) {
-  /* Get input current from arguments */
-  double I = 0.0;
-  if (argc > 1) {
-    I = atof(argv[1]);
-  }
-  
   int num_ts = (int)ceil(t_max / dt);
 
   t = (double *)malloc(sizeof(double) * num_ts);

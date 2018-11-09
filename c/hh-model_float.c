@@ -43,6 +43,7 @@
 
 #define I_start_time  1000.f
 #define I_end_time    5000.f
+#define I             12.f
 
 float *t;
 float *V;
@@ -80,12 +81,6 @@ float heaviside(float x) {
 }
 
 int main(int argc, char **argv) {
-  /* Get input current from arguments */
-  float I = 0.f;
-  if (argc > 1) {
-    I = atof(argv[1]);
-  }
-  
   int num_ts = (int)ceilf(t_max / dt);
 
   t = (float *)malloc(sizeof(float) * num_ts);
