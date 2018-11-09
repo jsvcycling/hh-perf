@@ -18,38 +18,35 @@
  *
  *------------------------------------------------------------------------------
  *
- * An implementation of the Hodkin-Huxley model in C using doubles.
+ * An implementation of the Hodkin-Huxley model in C using floats.
  *
  *==============================================================================
  */
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+
+using namespace std;
 
 /* Using preprocessor statements to reduce memory calls. */
-#define C_m 1.f
+#define C_m 1.0
 
 #define g_K   36.0
 #define g_Na  120.0
-#define g_L   0.3
+#define g_L   0.3f
 
 #define V_K   -12.0
 #define V_Na  115.0
-#define V_L   10.6
+#define V_L   10.6f
 
 #define t_max   10000.0
-#define dt      0.01
+#define dt      0.01f
 
 #define I_start_time  1000.0
 #define I_end_time    5000.0
 #define I             12.0
-
-double *t;
-double *V;
-double *N;
-double *M;
-double *H;
 
 double alpha_n(double v) {
   return 0.01f*(10.0 - v) / (exp((10.0 - v)/10.0) - 1.0);
@@ -60,11 +57,11 @@ double alpha_m(double v) {
 }
 
 double alpha_h(double v) {
-  return 0.07 * expf(-v / 20.);
+  return 0.07f * exp(-v / 20.0);
 }
 
 double beta_n(double v) {
-  return 0.125 * exp(-v / 80.0);
+  return 0.125f * exp(-v / 80.0);
 }
 
 double beta_m(double v) {
@@ -81,13 +78,13 @@ double heaviside(double x) {
 }
 
 int main(int argc, char **argv) {
-  int num_ts = (int)ceil(t_max / dt);
+  int num_ts = (int)ceilf(t_max / dt);
 
-  t = (double *)malloc(sizeof(double) * num_ts);
-  V = (double *)malloc(sizeof(double) * num_ts);
-  N = (double *)malloc(sizeof(double) * num_ts);
-  M = (double *)malloc(sizeof(double) * num_ts);
-  H = (double *)malloc(sizeof(double) * num_ts);
+  vector<double> t(num_ts);
+  vector<double> V(num_ts);
+  vector<double> N(num_ts);
+  vector<double> M(num_ts);
+  vector<double> H(num_ts);
 
   t[0] = 0.0;
   
@@ -100,7 +97,7 @@ int main(int argc, char **argv) {
   M[0] = alpha_m(V[0]);
   H[0] = alpha_h(V[0]);
 
-  for (int i = 0; i < num_ts - 1; i++) {
+  for (int i = 0; i < num_ts - 1; i++) {    
     double Iapp = I*heaviside(t[i] - I_start_time)*heaviside(I_end_time - t[i]);
 
     double I_K1 = g_K*pow(N[i], 4)*(V[i] - V_K);
@@ -132,36 +129,7 @@ int main(int argc, char **argv) {
     H[i+1] = H[i] + (H_1 + H_2) * dt / 2.0;
   }
 
-  printf("%f\n", V[num_ts - 1]);
-
-  /*
-   * Optional plotting functionality. Uncomment to enable (requires gnuplot).
-   */
-  /*
-  FILE *gnuplot = popen("gnuplot -persistent", "w");
-  fprintf(gnuplot, "set term png large size 1280,720\n");
-  fprintf(gnuplot, "set output 'output_double.png'\n");
-  fprintf(gnuplot, "set xrange [%f:%f]\n", 1000.0, 1050.0);
-  fprintf(gnuplot, "set yrange [%f:%f]\n", -20.0, 120.0);
-  fprintf(gnuplot, "set datafile separator ','\n");
-  fprintf(gnuplot, "plot '-' with lines\n");
-
-  for (int i = 0; i < num_ts; i++) {
-    fprintf(gnuplot, "%f,%f\n", t[i], V[i]);
-    fflush(gnuplot);
-  }
-
-  fprintf(gnuplot, "e\n");
-  fflush(gnuplot);
-  
-  pclose(gnuplot);
-  */
-
-  free(t);
-  free(V);
-  free(N);
-  free(M);
-  free(H);
+  cout << V[num_ts - 1] << endl;
 
   exit(EXIT_SUCCESS);
 }
